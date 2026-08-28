@@ -1,0 +1,245 @@
+/* ================= نعرفك قدّاش؟ — style =================
+   الهوية: ليل تونسي (بنفسجي غامق) + وردي دافي + ذهب الياسمين
+   ======================================================== */
+:root{
+  --ink:#12091F;
+  --ink-2:#1B0F2E;
+  --line:rgba(251,242,246,.10);
+  --surface:rgba(251,242,246,.055);
+  --rose:#FF5C8A;
+  --rose-deep:#C7325D;
+  --gold:#F2C46B;
+  --mint:#6FE3C4;
+  --jasmine:#FBF2F6;
+  --muted:#A794BE;
+  --r-lg:24px; --r-md:16px; --r-sm:11px;
+  --shadow:0 18px 50px rgba(0,0,0,.45);
+
+  --cat-love:#FF5C8A;
+  --cat-knowledge:#7BA9FF;
+  --cat-situation:#C58BFF;
+  --cat-humor:#FFD166;
+  --cat-bold:#FF6B4A;
+  --cat-mission:#6FE3C4;
+  --cat-deep:#9C8CFF;
+  --cat-relation:#FF8FB8;
+  --cat-special:var(--gold);
+  --accent:var(--rose);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:
+    radial-gradient(120% 80% at 80% -10%, #35164A 0%, transparent 55%),
+    radial-gradient(100% 70% at 0% 110%, #2A1140 0%, transparent 60%),
+    var(--ink);
+  color:var(--jasmine);
+  font-family:"IBM Plex Sans Arabic","Segoe UI",system-ui,sans-serif;
+  font-size:16px; line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+h1,h2,h3,.btn,.brand__title,.card__text,.turn{font-family:"Lemonada","IBM Plex Sans Arabic",sans-serif}
+
+/* ---------- شاشات ---------- */
+.screen{display:none; min-height:100dvh; padding:max(18px,env(safe-area-inset-top)) 18px 26px}
+.screen.is-active{display:flex; flex-direction:column; animation:fade .45s ease both}
+.wrap{width:100%; max-width:480px; margin:auto; display:flex; flex-direction:column; gap:16px}
+@keyframes fade{from{opacity:0; transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ---------- البراند ---------- */
+.brand{text-align:center; padding-top:14px}
+.brand__cards{position:relative; height:78px; margin-bottom:6px}
+.brand__cards i{
+  position:absolute; inset:0; margin:auto; width:52px; height:72px; border-radius:9px;
+  background:linear-gradient(160deg,#2B1442,#170B26); border:1px solid var(--line);
+  box-shadow:0 10px 24px rgba(0,0,0,.4);
+}
+.brand__cards i:nth-child(1){transform:rotate(-14deg) translateX(26px)}
+.brand__cards i:nth-child(2){transform:rotate(9deg) translateX(-22px)}
+.brand__cards i:nth-child(3){
+  background:linear-gradient(160deg,var(--rose),var(--rose-deep));
+  border-color:rgba(255,255,255,.25);
+  animation:float 4.5s ease-in-out infinite;
+}
+@keyframes float{50%{transform:translateY(-7px) rotate(-2deg)}}
+.brand__title{font-size:34px; font-weight:700; margin:0; letter-spacing:.5px;
+  background:linear-gradient(100deg,var(--jasmine),var(--gold));
+  -webkit-background-clip:text; background-clip:text; color:transparent}
+.brand__sub{color:var(--muted); margin:8px 0 0; font-size:15px}
+.brand__stat{color:var(--gold); font-size:13px; margin:10px 0 0; opacity:.85}
+
+/* ---------- بلوكات ---------- */
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg);
+  padding:20px; display:flex; flex-direction:column; gap:14px; backdrop-filter:blur(8px)}
+.h2{font-size:24px; margin:6px 0 0; text-align:center}
+.h3{font-size:15px; margin:6px 0 0; color:var(--muted); font-weight:600}
+.foot,.hint{color:var(--muted); font-size:13px; text-align:center; margin:0}
+
+.field{display:flex; flex-direction:column; gap:7px; font-size:14px; color:var(--muted)}
+.field input{
+  background:rgba(0,0,0,.28); border:1px solid var(--line); color:var(--jasmine);
+  border-radius:var(--r-md); padding:14px 16px; font-size:17px; font-family:inherit; width:100%;
+  transition:border-color .2s, box-shadow .2s;
+}
+.field input:focus{outline:none; border-color:var(--rose); box-shadow:0 0 0 4px rgba(255,92,138,.16)}
+.code-input{font-family:"Space Grotesk",monospace; letter-spacing:.42em; text-transform:uppercase;
+  text-align:center; font-size:26px; font-weight:700}
+
+/* ---------- أزرار ---------- */
+.btn{
+  border:0; border-radius:var(--r-md); padding:15px 18px; font-size:17px; font-weight:600;
+  cursor:pointer; width:100%; color:var(--jasmine); background:rgba(251,242,246,.08);
+  transition:transform .15s ease, filter .2s ease, background .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:active{transform:scale(.975)}
+.btn:focus-visible{outline:3px solid var(--gold); outline-offset:2px}
+.btn--primary{background:linear-gradient(105deg,var(--rose),var(--rose-deep)); box-shadow:0 12px 28px rgba(199,50,93,.35)}
+.btn--primary:disabled{filter:grayscale(.6) brightness(.6); box-shadow:none; cursor:not-allowed}
+.btn--ghost{border:1px solid var(--line); background:transparent}
+.btn--mini{width:auto; padding:9px 14px; font-size:14px; border:1px solid var(--line); background:transparent}
+.btn--link{background:none; color:var(--muted); font-size:14px; padding:10px; font-weight:500}
+.btn--ok{background:linear-gradient(105deg,var(--mint),#2FAF8C); color:#06231C}
+.btn--no{background:rgba(251,242,246,.07); border:1px solid var(--line)}
+.btn--gold{background:linear-gradient(105deg,var(--gold),#C9903A); color:#2A1B05}
+.btn.disabled{opacity:.45; pointer-events:none}
+.or{display:flex; align-items:center; gap:12px; color:var(--muted); font-size:13px}
+.or::before,.or::after{content:""; flex:1; height:1px; background:var(--line)}
+
+/* ---------- كود الـpartie ---------- */
+.code-card{background:linear-gradient(150deg,rgba(242,196,107,.16),rgba(255,92,138,.10));
+  border:1px solid rgba(242,196,107,.35); border-radius:var(--r-lg); padding:20px; text-align:center}
+.code-card__label{color:var(--muted); font-size:13px; display:block}
+.code-card__value{display:block; font-family:"Space Grotesk",monospace; font-size:42px; font-weight:700;
+  letter-spacing:.24em; color:var(--gold); margin:6px 0 12px; padding-right:.24em}
+.code-card__actions{display:flex; gap:10px; justify-content:center}
+
+.players{display:flex; gap:10px}
+.player{flex:1; background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md);
+  padding:14px; text-align:center}
+.player strong{display:block; font-size:17px}
+.player small{color:var(--muted); font-size:12px}
+.player.is-off{opacity:.5}
+.player.is-empty{border-style:dashed}
+.dot{display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--mint); margin-left:5px}
+.is-off .dot{background:var(--muted)}
+
+/* ---------- إعدادات ---------- */
+.cats{display:flex; flex-wrap:wrap; gap:8px}
+.cat-chip{border:1px solid var(--line); background:transparent; color:var(--muted);
+  border-radius:999px; padding:9px 13px; font-size:14px; font-family:inherit; cursor:pointer}
+.cat-chip.is-on{color:var(--jasmine); border-color:currentColor; background:rgba(255,255,255,.07)}
+.segmented{display:flex; gap:6px; background:rgba(0,0,0,.25); padding:5px; border-radius:var(--r-md)}
+.segmented button{flex:1; border:0; background:transparent; color:var(--muted); padding:10px 4px;
+  border-radius:11px; font-family:inherit; font-size:13px; cursor:pointer}
+.segmented button.is-on{background:rgba(251,242,246,.12); color:var(--jasmine)}
+
+/* ---------- HUD ---------- */
+.hud{display:flex; align-items:center; gap:10px; max-width:480px; width:100%; margin:0 auto}
+.hud__player{flex:1; background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md);
+  padding:10px 12px; display:flex; justify-content:space-between; align-items:center; gap:8px;
+  transition:border-color .3s, box-shadow .3s}
+.hud__player.is-turn{border-color:var(--rose); box-shadow:0 0 0 3px rgba(255,92,138,.14)}
+.hud__player.is-off{opacity:.55}
+.hud__name{font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.hud__score{font-family:"Space Grotesk",monospace; font-size:21px; font-weight:700; color:var(--gold)}
+.hud__mid{text-align:center; color:var(--muted); font-size:12px; line-height:1.1; min-width:44px}
+.hud__mid span{display:block; font-family:"Space Grotesk",monospace; font-size:18px; color:var(--jasmine)}
+
+.turn{text-align:center; font-size:19px; margin:16px auto 0; max-width:480px}
+.turn small{display:block; color:var(--muted); font-size:13px; font-family:"IBM Plex Sans Arabic",sans-serif}
+
+/* ---------- الكارت 3D ---------- */
+.stage{flex:1; display:flex; align-items:center; justify-content:center; perspective:1400px; padding:18px 0}
+.card3d{width:min(340px,86vw); aspect-ratio:3/4.1; position:relative}
+.card3d__inner{position:absolute; inset:0; transform-style:preserve-3d;
+  transition:transform .75s cubic-bezier(.5,.05,.25,1)}
+.card3d.is-flipped .card3d__inner{transform:rotateY(180deg)}
+.card3d.is-dealing .card3d__inner{animation:deal .55s ease}
+@keyframes deal{0%{transform:translateY(26px) rotate(-6deg) scale(.9); opacity:.2}100%{transform:none}}
+.card3d__face{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  border-radius:26px; padding:26px 22px; display:flex; flex-direction:column; box-shadow:var(--shadow)}
+
+.card3d__back{
+  background:linear-gradient(160deg,#2C1546,#160B26);
+  border:1px solid rgba(242,196,107,.25);
+  align-items:center; justify-content:center; overflow:hidden;
+}
+.card3d__logo{font-family:"Lemonada",sans-serif; font-size:24px; text-align:center; line-height:1.5;
+  color:var(--gold); position:relative; z-index:2; text-shadow:0 4px 18px rgba(0,0,0,.6)}
+/* موتيف ياسمين/زليج */
+.jasmine{position:absolute; inset:-30%; opacity:.5;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(242,196,107,.5) 1.6px, transparent 2px),
+    radial-gradient(circle at 0 0, rgba(255,92,138,.32) 1.6px, transparent 2px);
+  background-size:34px 34px, 34px 34px;
+  background-position:0 0, 17px 17px;
+  animation:drift 24s linear infinite;
+  mask-image:radial-gradient(circle at 50% 50%, #000 40%, transparent 78%);
+}
+@keyframes drift{to{transform:translate(34px,34px)}}
+
+.card3d__front{
+  transform:rotateY(180deg);
+  background:linear-gradient(165deg,#241237 0%,#160C24 100%);
+  border:1px solid var(--line);
+  border-top:4px solid var(--accent);
+  gap:14px; justify-content:center; text-align:center; overflow-y:auto;
+}
+.card3d__front::before{content:""; position:absolute; inset:0; border-radius:26px; pointer-events:none;
+  background:radial-gradient(90% 55% at 50% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%)}
+.card__cat{position:relative; font-size:13px; color:var(--accent); letter-spacing:.04em}
+.card__text{position:relative; font-size:clamp(18px,4.6vw,22px); font-weight:600; margin:0; line-height:1.85}
+.card__extra{position:relative; display:flex; flex-direction:column; gap:10px; font-size:15px; color:var(--jasmine)}
+.card__extra .mini{background:rgba(0,0,0,.28); border:1px solid var(--line); border-radius:var(--r-sm);
+  padding:11px 13px; text-align:right}
+.card__extra .mini b{color:var(--accent); display:block; font-size:12px; margin-bottom:3px}
+.card__pts{position:relative; font-size:12px; color:var(--muted)}
+.result-flash{position:relative; color:var(--mint); font-size:15px; font-weight:600}
+
+/* ---------- الأكشنات ---------- */
+.actions{max-width:480px; width:100%; margin:0 auto; display:flex; flex-direction:column; gap:10px}
+.actions .row{display:flex; gap:10px}
+.actions .row .btn{flex:1}
+.waiting{text-align:center; color:var(--muted); font-size:14px; padding:14px}
+.waiting b{color:var(--jasmine)}
+.pulse{animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.45}}
+
+.gamefoot{display:flex; gap:10px; max-width:480px; width:100%; margin:8px auto 0}
+
+/* ---------- النتيجة ---------- */
+.result{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg);
+  padding:26px 20px; text-align:center}
+.result__emoji{font-size:52px; display:block}
+.result__title{font-family:"Lemonada",sans-serif; font-size:22px; margin:8px 0 4px}
+.result__sub{color:var(--muted); font-size:14px; margin:0}
+.scores{display:flex; gap:10px}
+.score-card{flex:1; background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md);
+  padding:16px; text-align:center}
+.score-card.is-top{border-color:var(--gold); box-shadow:0 0 0 3px rgba(242,196,107,.13)}
+.score-card b{display:block; font-size:16px}
+.score-card span{font-family:"Space Grotesk",monospace; font-size:30px; color:var(--gold)}
+
+/* ---------- toast / offline / confetti ---------- */
+.toast{position:fixed; left:50%; top:calc(14px + env(safe-area-inset-top)); transform:translate(-50%,-160%);
+  background:#2B1442; border:1px solid var(--line); color:var(--jasmine); padding:12px 18px;
+  border-radius:999px; font-size:14px; z-index:60; transition:transform .35s cubic-bezier(.2,1.2,.3,1);
+  max-width:92vw; text-align:center; box-shadow:var(--shadow)}
+.toast.is-on{transform:translate(-50%,0)}
+.toast.is-bad{border-color:var(--rose)}
+.offline{position:fixed; inset-inline:0; bottom:0; background:var(--rose-deep); color:#fff; text-align:center;
+  padding:11px; font-size:14px; transform:translateY(110%); transition:transform .3s; z-index:70}
+.offline.is-on{transform:none}
+#fx-canvas{position:fixed; inset:0; pointer-events:none; z-index:50}
+
+@media (min-width:760px){
+  body{font-size:17px}
+  .card3d{width:360px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important; transition-duration:.08s !important}
+}

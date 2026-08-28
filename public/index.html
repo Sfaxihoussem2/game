@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ar-TN" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#12091F" />
+<title>نعرفك قدّاش؟ ❤️</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lemonada:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>❤️</text></svg>" />
+</head>
+<body>
+
+<canvas id="fx-canvas" aria-hidden="true"></canvas>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<!-- ============ الشاشة 1 : البداية ============ -->
+<section class="screen is-active" id="screen-home">
+  <div class="wrap">
+    <header class="brand">
+      <div class="brand__cards" aria-hidden="true"><i></i><i></i><i></i></div>
+      <h1 class="brand__title">نعرفك قدّاش؟</h1>
+      <p class="brand__sub">لعبة كوبل، كل واحد من تليفونو. اسحب كارت، جاوب بصراحة، وشوف قدّاش تعرفو بعضكم.</p>
+      <p class="brand__stat" id="deck-stat">…</p>
+    </header>
+
+    <div class="panel">
+      <label class="field">
+        <span>إسمك</span>
+        <input id="name-input" type="text" maxlength="18" placeholder="مثلاً: غفران" autocomplete="nickname" />
+      </label>
+
+      <button class="btn btn--primary" id="btn-create">نعمل Partie</button>
+
+      <div class="or"><span>ولا</span></div>
+
+      <label class="field">
+        <span>كود الـPartie</span>
+        <input id="code-input" type="text" maxlength="5" placeholder="K7P4X" class="code-input" autocomplete="off" autocapitalize="characters" />
+      </label>
+      <button class="btn btn--ghost" id="btn-join">ندخل لـ Partie</button>
+    </div>
+
+    <p class="foot">الكونتينيو الكل بالتونسي 🇹🇳 — اللعبة للزوز برك، بلا حسابات وبلا تسجيل.</p>
+  </div>
+</section>
+
+<!-- ============ الشاشة 2 : اللوبي ============ -->
+<section class="screen" id="screen-lobby">
+  <div class="wrap">
+    <h2 class="h2">الـPartie جاهزة</h2>
+
+    <div class="code-card">
+      <span class="code-card__label">عدّي الكود لشريكك</span>
+      <strong class="code-card__value" id="room-code">-----</strong>
+      <div class="code-card__actions">
+        <button class="btn btn--mini" id="btn-copy">نسخ الكود</button>
+        <button class="btn btn--mini" id="btn-share">مشاركة</button>
+      </div>
+    </div>
+
+    <div class="players" id="lobby-players"></div>
+
+    <div class="panel panel--settings" id="settings-panel">
+      <h3 class="h3">شنوة نلعبو؟</h3>
+      <div class="cats" id="cats-list"></div>
+
+      <h3 class="h3">طول الـPartie</h3>
+      <div class="segmented" id="length-list">
+        <button data-len="10">10 كروت</button>
+        <button data-len="20" class="is-on">20 كارت</button>
+        <button data-len="30">30 كارت</button>
+        <button data-len="0">بلا حدّ</button>
+      </div>
+    </div>
+
+    <button class="btn btn--primary" id="btn-start">يلّا نبداو ❤️</button>
+    <p class="hint" id="lobby-hint">نستنّاو شريكك يدخل بالكود…</p>
+    <button class="btn btn--link" id="btn-leave-lobby">خرج من الـPartie</button>
+  </div>
+</section>
+
+<!-- ============ الشاشة 3 : اللعب ============ -->
+<section class="screen" id="screen-game">
+  <header class="hud">
+    <div class="hud__player" id="hud-p1"><span class="hud__name">—</span><span class="hud__score">0</span></div>
+    <div class="hud__mid"><span id="hud-progress">0</span><small>كارت</small></div>
+    <div class="hud__player" id="hud-p2"><span class="hud__name">—</span><span class="hud__score">0</span></div>
+  </header>
+
+  <div class="turn" id="turn-banner">دور —</div>
+
+  <div class="stage">
+    <div class="card3d" id="card3d">
+      <div class="card3d__inner" id="card-inner">
+        <div class="card3d__face card3d__back">
+          <div class="jasmine" aria-hidden="true"></div>
+          <span class="card3d__logo">نعرفك<br />قدّاش؟</span>
+        </div>
+        <div class="card3d__face card3d__front" id="card-front">
+          <span class="card__cat" id="card-cat">—</span>
+          <p class="card__text" id="card-text"></p>
+          <div class="card__extra" id="card-extra"></div>
+          <span class="card__pts" id="card-pts"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions" id="actions"></div>
+
+  <footer class="gamefoot">
+    <button class="btn btn--link" id="btn-nudge">نبّه شريكك 👋</button>
+    <button class="btn btn--link" id="btn-end">سالي الـPartie</button>
+  </footer>
+</section>
+
+<!-- ============ الشاشة 4 : النتيجة ============ -->
+<section class="screen" id="screen-end">
+  <div class="wrap">
+    <h2 class="h2">🏆 النتيجة</h2>
+    <div class="result" id="result-box"></div>
+    <div class="scores" id="final-scores"></div>
+    <button class="btn btn--primary" id="btn-again">نعاودو 🔄</button>
+    <button class="btn btn--link" id="btn-home">نرجعو للبداية</button>
+  </div>
+</section>
+
+<div class="offline" id="offline-bar">الكونيكسيون طاحت… قاعدين نحاولو نرجعو 🔌</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>
