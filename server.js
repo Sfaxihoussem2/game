@@ -26,9 +26,12 @@ app.get('/api/categories', (_req, res) => res.json(CATEGORIES));
 app.get('/api/games', (_req, res) => res.json(GAMES));
 
 // ---- بثّ الحالة: كل لاعب ياخذ نسخة متاعو (بلا أسرار الآخر) -------------
+// كل لاعب ياخذ نسخة متاعو (بلا أسرار الآخر)، و على كل الsockets المفتوحين عندو
+// (onglet جديد، إعادة تحميل، رجوع بعد قطع الكونيكسيون...)
 function broadcast(room) {
   for (const p of room.players) {
-    if (p.socketId) io.to(p.socketId).emit('state', R.publicState(room, p.id));
+    const payload = R.publicState(room, p.id);
+    for (const sid of p.socketIds || []) io.to(sid).emit('state', payload);
   }
 }
 
@@ -37,7 +40,11 @@ function bindSocket(socket, room, playerId) {
   socket.data.playerId = playerId;
   socket.join(room.code);
   const p = R.findPlayer(room, playerId);
-  if (p) { p.connected = true; p.socketId = socket.id; }
+  if (p) {
+    p.socketIds = (p.socketIds || []).filter((id) => id !== socket.id && io.sockets.sockets.has(id));
+    p.socketIds.push(socket.id);
+    p.connected = true;
+  }
 }
 
 function ctx(socket) {
@@ -100,7 +107,11 @@ io.on('connection', (socket) => {
   // ---- الهاب ----
   socket.on('hub:open', (_p, cb) => act(socket, cb, (room, p) => R.openHub(room, p.id)));
   socket.on('hub:propose', ({ gameId } = {}, cb) =>
-    act(socket, cb, (room, p) => R.proposeGame(room, p.id, gameId)));
+    act(socket, cb, (room, p) => {
+      const res = R.proposeGame(room, p.id, gameId);
+      if (!res.error) socket.to(room.code).emit('fx', { type: 'invite', name: p.name, gameId });
+      return res;
+    }));
   socket.on('hub:answer', ({ accept } = {}, cb) =>
     act(socket, cb, (room, p) => R.answerProposal(room, p.id, !!accept)));
   socket.on('hub:ready', ({ ready } = {}, cb) =>
@@ -180,11 +191,10 @@ io.on('connection', (socket) => {
     const room = R.getRoom(socket.data.code);
     if (!room) return;
     const player = R.findPlayer(room, socket.data.playerId);
-    if (player && player.socketId === socket.id) {
-      player.connected = false;
-      player.socketId = null;
-      broadcast(room);
-    }
+    if (!player) return;
+    player.socketIds = (player.socketIds || []).filter((id) => id !== socket.id);
+    player.connected = player.socketIds.length > 0;
+    broadcast(room);
   });
 });
 

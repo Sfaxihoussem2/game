@@ -27,9 +27,18 @@
 
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const saveSession = () => localStorage.setItem(SS, JSON.stringify(me));
-  const loadSession = () => { try { return JSON.parse(localStorage.getItem(SS) || 'null'); } catch { return null; } };
-  const clearSession = () => localStorage.removeItem(SS);
+  // الهوية تتسجّل في sessionStorage: كل onglet عندو هوية وحدو،
+  // هكّا تنجم تجرّب في زوز onglets في نفس الnavigateur بلا ما يتخلطو اللاعبين.
+  // الإسم برك يتسجّل في localStorage باش يتعمّر وحدو المرة الجاية.
+  const saveSession = () => {
+    try { sessionStorage.setItem(SS, JSON.stringify(me)); } catch { }
+    try { localStorage.setItem(SS + '.name', me.name || ''); } catch { }
+  };
+  const loadSession = () => {
+    try { return JSON.parse(sessionStorage.getItem(SS) || 'null'); } catch { return null; }
+  };
+  const loadName = () => { try { return localStorage.getItem(SS + '.name') || ''; } catch { return ''; } };
+  const clearSession = () => { try { sessionStorage.removeItem(SS); } catch { } };
 
   let toastTimer;
   function toast(msg, bad) {
@@ -70,8 +79,7 @@
 
   const nameInput = $('name-input');
   const codeInput = $('code-input');
-  const saved = loadSession();
-  if (saved && saved.name) nameInput.value = saved.name;
+  nameInput.value = loadName();
   codeInput.addEventListener('input', () => {
     codeInput.value = codeInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
   });
@@ -795,6 +803,10 @@
     if (f.type === 'nudge' && f.by !== me.playerId) {
       toast(`${f.name} ينبّهك 👋`);
       if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
+    }
+    if (f.type === 'invite') {
+      toast(`🎮 ${f.name} يحب يلعب معاك — شوف الطلب`);
+      if (navigator.vibrate) navigator.vibrate([60, 60, 60]);
     }
     if (f.type === 'badge' && f.badges) {
       toast('🏅 شارة جديدة: ' + f.badges.map((b) => `${b.emoji} ${b.name}`).join(' · '));
