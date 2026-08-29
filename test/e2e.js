@@ -33,9 +33,14 @@ const ok = (c, m) => { console.log(`${c ? '✅' : '❌'} ${m}`); if (!c) fails++
   // 2) الإعدادات + البداية
   ok((await ask(B, 'room:settings', { settings: { targetCards: 10 } })).ok === false, 'غير الhost ما ينجمش يبدّل الإعدادات');
   ok((await ask(A, 'room:settings', { settings: { targetCards: 10, cats: ['love', 'knowledge', 'mission', 'situation', 'bold', 'deep', 'relation', 'humor'] } })).ok, 'الhost بدّل الإعدادات');
-  ok((await ask(B, 'game:start')).ok === false, 'غير الhost ما يبداش');
-  ok((await ask(A, 'game:start')).ok, 'الـpartie بدات');
+  ok((await ask(B, 'hub:open')).ok === false, 'غير الhost ما يفتحش الهاب');
+  ok((await ask(A, 'hub:open')).ok, 'الهاب تفتح');
+  await ask(A, 'hub:propose', { gameId: 'cards' });
+  await ask(B, 'hub:answer', { accept: true });
+  await ask(A, 'hub:ready', { ready: true });
+  await ask(B, 'hub:ready', { ready: true });
   await wait(60);
+  ok(sA.status === 'playing' && sA.game.id === 'cards', 'لعبة الكروت بدات بعد ready الزوز');
   ok(sA && sB && sA.turnId === sB.turnId, 'الدور متزامن بين الزوز');
 
   // 3) منع اللعب في غير الدور
@@ -72,7 +77,7 @@ const ok = (c, m) => { console.log(`${c ? '✅' : '❌'} ${m}`); if (!c) fails++
     await wait(30);
   }
 
-  ok(sA.status === 'ended', `الـpartie سالات بعد ${sA.cardsPlayed} كارت`);
+  ok(sA.status === 'result', `اللعبة سالات بعد ${sA.cardsPlayed} كارت`);
   ok(sA.cardsPlayed === 10, 'العدّاد وقف على 10 كروت كيما الإعدادات');
   ok(JSON.stringify(sA.players.map((p) => p.score)) === JSON.stringify(sB.players.map((p) => p.score)), 'السكور متزامن: ' + sA.players.map((p) => `${p.name}=${p.score}`).join(' , '));
   ok(sA.players.some((p) => p.score > 0), 'فمّة نقاط تحسبت');
@@ -86,9 +91,12 @@ const ok = (c, m) => { console.log(`${c ? '✅' : '❌'} ${m}`); if (!c) fails++
   ok(re.ok && re.state.code === c.code, 'رجوع بعد قطع الكونيكسيون: الـpartie ترجعت');
 
   // 6) نعاودو
-  ok((await ask(A2, 'game:restart')).ok, 'restart خدم');
+  ok((await ask(A2, 'game:again')).ok, 'نعاودو خدم');
   await wait(60);
-  ok(sB.status === 'playing' && sB.cardsPlayed === 0 && sB.players.every((p) => p.score === 0), 'partie جديدة بسكور 0');
+  ok(sB.status === 'playing' && sB.cardsPlayed === 0, 'لعبة جديدة بدات');
+  ok((await ask(A2, 'session:new')).ok, 'session جديدة');
+  await wait(40);
+  ok(sB.players.every((p) => p.score === 0) && sB.status === 'hub', 'السكور رجع 0 والزوز في الهاب');
 
   A2.close(); B.close();
   console.log(fails ? `\n❌ ${fails} test(s) طاحو` : '\n🎉 كل الtests نجحو');

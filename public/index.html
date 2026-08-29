@@ -77,13 +77,22 @@
       </div>
     </div>
 
-    <button class="btn btn--primary" id="btn-start">يلّا نبداو ❤️</button>
+    <button class="btn btn--primary" id="btn-start">يلّا نمشيو للألعاب 🎮</button>
     <p class="hint" id="lobby-hint">نستنّاو شريكك يدخل بالكود…</p>
     <button class="btn btn--link" id="btn-leave-lobby">خرج من الـPartie</button>
   </div>
 </section>
 
-<!-- ============ الشاشة 3 : اللعب ============ -->
+<!-- ============ الشاشة 3 : Game Hub ============ -->
+<section class="screen" id="screen-hub"><div class="wrap" id="hub-root"></div></section>
+
+<!-- ============ الشاشة 4 : باقي الألعاب ============ -->
+<section class="screen" id="screen-play"><div class="wrap wrap--wide" id="play-root"></div></section>
+
+<!-- ============ الشاشة 5 : نتيجة اللعبة ============ -->
+<section class="screen" id="screen-result"><div class="wrap" id="result-root"></div></section>
+
+<!-- ============ الشاشة 6 : لعبة الكروت ============ -->
 <section class="screen" id="screen-game">
   <header class="hud">
     <div class="hud__player" id="hud-p1"><span class="hud__name">—</span><span class="hud__score">0</span></div>
@@ -118,16 +127,8 @@
   </footer>
 </section>
 
-<!-- ============ الشاشة 4 : النتيجة ============ -->
-<section class="screen" id="screen-end">
-  <div class="wrap">
-    <h2 class="h2">🏆 النتيجة</h2>
-    <div class="result" id="result-box"></div>
-    <div class="scores" id="final-scores"></div>
-    <button class="btn btn--primary" id="btn-again">نعاودو 🔄</button>
-    <button class="btn btn--link" id="btn-home">نرجعو للبداية</button>
-  </div>
-</section>
+<!-- ============ الشاشة 7 : نهاية الSession ============ -->
+<section class="screen" id="screen-end"><div class="wrap" id="end-root"></div></section>
 
 <div class="offline" id="offline-bar">الكونيكسيون طاحت… قاعدين نحاولو نرجعو 🔌</div>
 

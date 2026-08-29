@@ -241,3 +241,99 @@ l'active depuis le lobby.
 Zéro doublon (vérifié), zéro texte factice.
 
 Licence MIT — fais-en ce que tu veux. ❤️
+
+---
+
+# 🎮 Game Hub — 10 ألعاب
+
+Depuis la v2, l'application n'est plus un seul jeu de cartes mais une **plateforme
+privée de jeux de couple**. Le parcours est :
+
+```
+نعمل Partie → نشاركو الكود → الشريك يدخل → Lobby → 🎮 Game Hub
+   → نختارو لعبة → الشريك يوافق → الزوز Ready → نلعبو → 🏆 نتيجة
+   → لعبة أخرى / نعاودو / stats الsession
+```
+
+Les deux joueurs restent **dans la même Room** pour toute la session, et le score
+est **global** : tous les jeux alimentent le même total.
+
+## Les jeux
+
+| # | Jeu | Comment ça marche | Points |
+|---|---|---|---|
+| ❤️ | نعرفك قدّاش؟ | 562 cartes, tours alternés, cartes spéciales | 1–3 |
+| 🧠 | شكون يعرف الآخر أكثر؟ | L'un répond sur lui-même, l'autre devine — réponses cachées | 2 |
+| 💭 | تختار شنوّة؟ (Would You Rather) | Choix simultané, révélation après les deux réponses | 1 |
+| 😂 | مين فينا؟ | Chacun vote : toi / moi / les deux | 1 |
+| 🔮 | Guess My Answer | Question ouverte, l'autre devine la vraie réponse | 2 |
+| 📸 | Memories Challenge | Les deux racontent le même souvenir, on compare | 2 |
+| 🎯 | Truth or Challenge | Truth (+1) ou Challenge (+3), à son tour | 1 / 3 |
+| ⏱️ | Speed Challenge | « أذكر 3 حاجات » avec compte à rebours 5–30 s | 0–3 |
+| 🧩 | Puzzle متاعنا | Votre photo découpée en 9/16/25/36, résolue à deux en temps réel | 3 / perf |
+| 🎨 | Draw & Guess | Canvas partagé live, 60 s, points selon la rapidité | 1–3 |
+
+## Ready system
+
+Un joueur propose un jeu → l'autre reçoit « X يحب يلعب … موافق؟ » → une fois
+accepté, chacun appuie sur **أنا جاهز ❤️**. Le jeu ne démarre que quand les deux
+sont prêts (vérifié côté serveur).
+
+## Secrets
+
+Chaque joueur reçoit **sa propre version** de l'état : les réponses de l'autre et
+le mot à dessiner sont retirés côté serveur avant l'envoi (`maskGame`). Rien de
+secret ne transite avant le moment de la révélation.
+
+## Puzzle : la photo
+
+La photo est réduite à 900 px et compressée en JPEG dans le navigateur, puis
+transmise par WebSocket à l'autre joueur et gardée en mémoire du serveur le temps
+de la partie. Elle n'est écrite sur aucun disque et disparaît à la fin de la session.
+
+## Badges et statistiques
+
+9 badges se débloquent automatiquement (Perfect Match, Mind Reader, Puzzle Masters,
+Artist, Speed Couple, Love Birds, Chemistry, Duo de Clowns, Couple Champion).
+À la fin de la session : score, nombre de jeux, réponses identiques, bonnes
+prédictions, missions réussies, puzzles, dessins devinés, meilleur jeu, et un
+verdict ludique — **présenté explicitement comme un jeu, pas une analyse psychologique**.
+
+## Contenu total : 1 468 éléments
+
+| Source | Éléments |
+|---|---|
+| Cartes نعرفك قدّاش | 562 |
+| شكون يعرف الآخر | 100 |
+| Would You Rather | 100 |
+| مين فينا | 100 |
+| Guess My Answer | 100 |
+| Truth | 100 |
+| Challenge | 100 |
+| Memories | 55 |
+| Speed | 101 |
+| Mots à dessiner | 150 |
+
+## Architecture des modules
+
+```
+lib/games.js      # catalogue + moteurs : duel, tor, speed, puzzle, draw
+lib/rooms.js      # room, hub, ready, score global, badges, stats
+data/games/*.js   # contenu de chaque jeu (un fichier = un jeu)
+public/app.js     # Hub, rendu par moteur, canvas, puzzle, timers
+```
+
+Ajouter un jeu = ajouter son contenu dans `data/games/`, son entrée dans `GAMES`
+et son cas dans `gameAction` + une fonction de rendu côté client. Les autres jeux
+ne bougent pas.
+
+## Tests
+
+```bash
+npm start      # terminal 1
+npm test       # terminal 2 : lance les deux suites
+```
+
+`test/e2e.js` couvre la room et le jeu de cartes.
+`test/e2e-games.js` fait jouer deux vrais clients aux 10 jeux et vérifie
+notamment que rien de secret ne fuite avant la révélation.
